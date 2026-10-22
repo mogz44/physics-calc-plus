@@ -6,7 +6,7 @@ import '../../models/input_row_model.dart';
 import '../widgets/input_row_widget.dart';
 import 'solution_report_sheet.dart';
 
-/// Physics Calc+ (Ana Ekran - Dinamik Çıkarım Motoru)
+/// Physics Calc+ (Ana Ekran - Dikey Kart Mimarili Dinamik Çıkarım Motoru)
 class CalcScreen extends StatefulWidget {
   const CalcScreen({super.key});
 
@@ -79,6 +79,7 @@ class _CalcScreenState extends State<CalcScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final hasDerived = _currentResult != null && _currentResult!.hasDerivedValues;
     final derivedCount = _currentResult?.newlyDerivedQuantityIds.length ?? 0;
 
@@ -86,14 +87,14 @@ class _CalcScreenState extends State<CalcScreen> {
       appBar: AppBar(
         title: Row(
           children: [
-            Container(
-              padding: const EdgeInsets.all(6),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.primary.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(8),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.asset(
+                'assets/icon/app_logo.png',
+                width: 28,
+                height: 28,
+                fit: BoxFit.cover,
               ),
-              child: Icon(Icons.calculate_rounded,
-                  color: theme.colorScheme.primary, size: 22),
             ),
             const SizedBox(width: 10),
             const Text('Physics Calc+'),
@@ -110,52 +111,21 @@ class _CalcScreenState extends State<CalcScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // Bilgi ve Kolon Başlığı
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+            // Bilgi ve Başlık Satırı
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 12, 20, 6),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Expanded(
-                    flex: 4,
-                    child: Text(
-                      'BÜYÜKLÜK',
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 0.5,
-                        color: Colors.grey,
-                      ),
+                  Text(
+                    'BİLİNEN DEĞERLER (${_inputRows.length})',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 0.8,
+                      color: colorScheme.onSurfaceVariant,
                     ),
                   ),
-                  const SizedBox(width: 8),
-                  const Expanded(
-                    flex: 3,
-                    child: Text(
-                      'DEĞER',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 0.5,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  const Expanded(
-                    flex: 3,
-                    child: Text(
-                      'BİRİM',
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 0.5,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ),
-                  if (_inputRows.length > 2) const SizedBox(width: 36),
                 ],
               ),
             ),
@@ -163,24 +133,29 @@ class _CalcScreenState extends State<CalcScreen> {
             // Canlı Durum Bildirim Şeridi (Yeni değer türetildiğinde belirir)
             if (hasDerived)
               Container(
-                margin: const EdgeInsets.fromLTRB(16, 10, 16, 4),
+                margin: const EdgeInsets.fromLTRB(16, 6, 16, 4),
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                    const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                 decoration: BoxDecoration(
-                  color: Colors.green.withValues(alpha: 0.12),
+                  color: colorScheme.primary.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: Colors.green.withValues(alpha: 0.3)),
+                  border: Border.all(
+                    color: colorScheme.primary.withValues(alpha: 0.35),
+                  ),
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.auto_awesome,
-                        color: Colors.green, size: 18),
+                    Icon(
+                      Icons.auto_awesome,
+                      color: colorScheme.primary,
+                      size: 18,
+                    ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         '$derivedCount yeni büyüklük zincirleme çözüldü!',
-                        style: const TextStyle(
-                          color: Colors.green,
+                        style: TextStyle(
+                          color: colorScheme.primary,
                           fontWeight: FontWeight.bold,
                           fontSize: 13,
                         ),
@@ -190,7 +165,7 @@ class _CalcScreenState extends State<CalcScreen> {
                       onPressed: _showReport,
                       style: TextButton.styleFrom(
                         visualDensity: VisualDensity.compact,
-                        foregroundColor: Colors.green,
+                        foregroundColor: colorScheme.primary,
                       ),
                       child: const Text('İncele'),
                     ),
@@ -198,10 +173,10 @@ class _CalcScreenState extends State<CalcScreen> {
                 ),
               ),
 
-            // Dinamik Satırlar Listesi
+            // Dinamik Dikey Satırlar Listesi
             Expanded(
               child: ListView.builder(
-                padding: const EdgeInsets.only(top: 8, bottom: 20),
+                padding: const EdgeInsets.only(top: 6, bottom: 16),
                 itemCount: _inputRows.length,
                 itemBuilder: (context, index) {
                   return InputRowWidget(
@@ -219,14 +194,10 @@ class _CalcScreenState extends State<CalcScreen> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: theme.scaffoldBackgroundColor,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
-                    offset: const Offset(0, -4),
-                    blurRadius: 10,
-                  ),
-                ],
+                color: colorScheme.surface,
+                border: Border(
+                  top: BorderSide(color: colorScheme.outline, width: 1),
+                ),
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -236,12 +207,18 @@ class _CalcScreenState extends State<CalcScreen> {
                     width: double.infinity,
                     height: 46,
                     child: OutlinedButton.icon(
-                      icon: const Icon(Icons.add, size: 20),
-                      label: const Text(
+                      icon: Icon(Icons.add, size: 20, color: colorScheme.primary),
+                      label: Text(
                         'Değer Ekle',
-                        style: TextStyle(fontWeight: FontWeight.w600),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: colorScheme.primary,
+                        ),
                       ),
                       style: OutlinedButton.styleFrom(
+                        side: BorderSide(
+                          color: colorScheme.primary.withValues(alpha: 0.5),
+                        ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -269,11 +246,11 @@ class _CalcScreenState extends State<CalcScreen> {
                       ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: hasDerived
-                            ? theme.colorScheme.primary
-                            : theme.colorScheme.surfaceContainerHighest,
+                            ? colorScheme.primary
+                            : colorScheme.surfaceContainerHighest,
                         foregroundColor: hasDerived
-                            ? Colors.white
-                            : theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.5),
+                            ? colorScheme.onPrimary
+                            : colorScheme.onSurfaceVariant,
                         elevation: hasDerived ? 2 : 0,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),

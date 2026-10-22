@@ -150,12 +150,13 @@ class _ConverterScreenState extends State<ConverterScreen> {
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: theme.dividerColor),
+                          border: Border.all(color: theme.colorScheme.outline),
                         ),
                         child: DropdownButtonHideUnderline(
                           child: DropdownButton<PhysicsUnit>(
                             value: _fromUnit,
                             isExpanded: true,
+                            dropdownColor: theme.colorScheme.surface,
                             items: _availableUnits.map((u) {
                               return DropdownMenuItem(
                                 value: u,
@@ -181,12 +182,13 @@ class _ConverterScreenState extends State<ConverterScreen> {
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: theme.dividerColor),
+                          border: Border.all(color: theme.colorScheme.outline),
                         ),
                         child: DropdownButtonHideUnderline(
                           child: DropdownButton<PhysicsUnit>(
                             value: _toUnit,
                             isExpanded: true,
+                            dropdownColor: theme.colorScheme.surface,
                             items: _availableUnits.map((u) {
                               return DropdownMenuItem(
                                 value: u,
