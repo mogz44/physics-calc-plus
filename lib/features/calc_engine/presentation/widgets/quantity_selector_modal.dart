@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import '../../../../core/localization/app_localizations.dart';
 import '../../../common_physics/data/standard_quantities.dart';
 import '../../../common_physics/models/physics_category.dart';
 import '../../../common_physics/models/physics_quantity.dart';
 
-/// Kullanıcının fiziksel büyüklüğü arayarak ve kategorilere göre seçmesini sağlayan Modal.
+/// Kullanıcının fiziksel büyüklüğü arayarak ve kategorilere göre seçmesini sağlayan Modal (TR/EN Destekli).
 class QuantitySelectorModal extends StatefulWidget {
   final PhysicsQuantity? currentSelected;
 
@@ -36,7 +37,7 @@ class _QuantitySelectorModalState extends State<QuantitySelectorModal> {
     super.dispose();
   }
 
-  List<PhysicsQuantity> get _filteredQuantities {
+  List<PhysicsQuantity> _getFilteredQuantities(String langCode) {
     return StandardQuantities.all.where((q) {
       if (_selectedCategory != null && q.category != _selectedCategory) {
         return false;
@@ -44,9 +45,15 @@ class _QuantitySelectorModalState extends State<QuantitySelectorModal> {
       if (_searchQuery.isEmpty) return true;
 
       final query = _searchQuery.toLowerCase();
-      return q.name.toLowerCase().contains(query) ||
-          q.symbol.toLowerCase().contains(query) ||
-          q.id.toLowerCase().contains(query);
+      final nameTr = q.name.toLowerCase();
+      final nameEn = (q.nameEn ?? '').toLowerCase();
+      final symbol = q.symbol.toLowerCase();
+      final id = q.id.toLowerCase();
+
+      return nameTr.contains(query) ||
+          nameEn.contains(query) ||
+          symbol.contains(query) ||
+          id.contains(query);
     }).toList();
   }
 
@@ -54,6 +61,8 @@ class _QuantitySelectorModalState extends State<QuantitySelectorModal> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final loc = context.loc;
+    final filteredQuantities = _getFilteredQuantities(loc.languageCode);
 
     return Container(
       height: MediaQuery.of(context).size.height * 0.78,
@@ -80,9 +89,9 @@ class _QuantitySelectorModalState extends State<QuantitySelectorModal> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'Fiziksel Büyüklük Seç',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                Text(
+                  loc.selectQuantity,
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 IconButton(
                   icon: const Icon(Icons.close),
@@ -99,7 +108,7 @@ class _QuantitySelectorModalState extends State<QuantitySelectorModal> {
               controller: _searchController,
               onChanged: (val) => setState(() => _searchQuery = val.trim()),
               decoration: InputDecoration(
-                hintText: 'Büyüklük veya sembol ara (örn: Güç, W, v)...',
+                hintText: loc.searchQuantityHint,
                 prefixIcon: const Icon(Icons.search, size: 20),
                 suffixIcon: _searchQuery.isNotEmpty
                     ? IconButton(
@@ -121,7 +130,7 @@ class _QuantitySelectorModalState extends State<QuantitySelectorModal> {
             child: Row(
               children: [
                 FilterChip(
-                  label: const Text('Tümü'),
+                  label: Text(loc.all),
                   selected: _selectedCategory == null,
                   onSelected: (_) => setState(() => _selectedCategory = null),
                 ),
@@ -130,7 +139,7 @@ class _QuantitySelectorModalState extends State<QuantitySelectorModal> {
                   return Padding(
                     padding: const EdgeInsets.only(right: 8),
                     child: FilterChip(
-                      label: Text('${cat.icon} ${cat.label}'),
+                      label: Text('${cat.icon} ${cat.getLocalizedLabel(loc.languageCode)}'),
                       selected: _selectedCategory == cat,
                       onSelected: (selected) {
                         setState(() {
@@ -148,20 +157,20 @@ class _QuantitySelectorModalState extends State<QuantitySelectorModal> {
 
           // Büyüklük listesi
           Expanded(
-            child: _filteredQuantities.isEmpty
+            child: filteredQuantities.isEmpty
                 ? Center(
                     child: Text(
-                      'Sonuç bulunamadı',
+                      loc.noResults,
                       style: TextStyle(
                         color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.6),
                       ),
                     ),
                   )
                 : ListView.builder(
-                    itemCount: _filteredQuantities.length,
+                    itemCount: filteredQuantities.length,
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     itemBuilder: (context, index) {
-                      final item = _filteredQuantities[index];
+                      final item = filteredQuantities[index];
                       final isSelected = widget.currentSelected?.id == item.id;
 
                       return ListTile(
@@ -176,14 +185,14 @@ class _QuantitySelectorModalState extends State<QuantitySelectorModal> {
                           child: Text(item.icon, style: const TextStyle(fontSize: 18)),
                         ),
                         title: Text(
-                          '${item.name} (${item.symbol})',
+                          '${item.getLocalizedName(loc.languageCode)} (${item.symbol})',
                           style: TextStyle(
                             fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
                             color: isSelected ? theme.colorScheme.primary : null,
                           ),
                         ),
                         subtitle: Text(
-                          '${item.category.label} • SI: ${item.defaultUnitId}',
+                          '${item.category.getLocalizedLabel(loc.languageCode)} • SI: ${item.defaultUnitId}',
                           style: TextStyle(
                             fontSize: 12,
                             color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.7),

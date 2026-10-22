@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
+import '../../../../core/localization/app_localizations.dart';
 import '../../engine/inference_engine.dart';
 import '../../models/inference_result.dart';
 import '../../models/input_row_model.dart';
@@ -65,12 +66,13 @@ class _CalcScreenState extends State<CalcScreen> {
   }
 
   void _showReport() {
+    final loc = context.loc;
     if (_currentResult != null) {
       SolutionReportSheet.show(context, _currentResult!);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Lütfen geçerli veri büyüklüğü ve sayısal değer girin.'),
+        SnackBar(
+          content: Text(loc.invalidInputWarning),
         ),
       );
     }
@@ -80,6 +82,7 @@ class _CalcScreenState extends State<CalcScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final loc = context.loc;
     final hasDerived = _currentResult != null && _currentResult!.hasDerivedValues;
     final derivedCount = _currentResult?.newlyDerivedQuantityIds.length ?? 0;
 
@@ -97,13 +100,13 @@ class _CalcScreenState extends State<CalcScreen> {
               ),
             ),
             const SizedBox(width: 10),
-            const Text('Physics Calc+'),
+            Text(loc.appTitle),
           ],
         ),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh_rounded),
-            tooltip: 'Girdileri Temizle',
+            tooltip: loc.clearInputs,
             onPressed: _clearAll,
           ),
         ],
@@ -118,12 +121,19 @@ class _CalcScreenState extends State<CalcScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'BİLİNEN DEĞERLER (${_inputRows.length})',
+                    '${loc.knownValuesHeader} (${_inputRows.length})',
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 0.8,
                       color: colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                  Text(
+                    loc.verticalCardsSubtitle,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
                     ),
                   ),
                 ],
@@ -153,7 +163,7 @@ class _CalcScreenState extends State<CalcScreen> {
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        '$derivedCount yeni büyüklük zincirleme çözüldü!',
+                        loc.derivedCountBanner(derivedCount),
                         style: TextStyle(
                           color: colorScheme.primary,
                           fontWeight: FontWeight.bold,
@@ -167,7 +177,7 @@ class _CalcScreenState extends State<CalcScreen> {
                         visualDensity: VisualDensity.compact,
                         foregroundColor: colorScheme.primary,
                       ),
-                      child: const Text('İncele'),
+                      child: Text(loc.inspect),
                     ),
                   ],
                 ),
@@ -209,7 +219,7 @@ class _CalcScreenState extends State<CalcScreen> {
                     child: OutlinedButton.icon(
                       icon: Icon(Icons.add, size: 20, color: colorScheme.primary),
                       label: Text(
-                        'Değer Ekle',
+                        loc.addValue,
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           color: colorScheme.primary,
@@ -237,8 +247,8 @@ class _CalcScreenState extends State<CalcScreen> {
                       icon: const Icon(Icons.insights, size: 20),
                       label: Text(
                         hasDerived
-                            ? 'Sonuç Raporunu Gör ($derivedCount Değer)'
-                            : 'Sonuç Raporunu Gör',
+                            ? loc.viewReportWithCount(derivedCount)
+                            : loc.viewReport,
                         style: const TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,

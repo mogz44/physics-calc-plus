@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'core/localization/app_localizations.dart';
 import 'features/calc_engine/presentation/screens/calc_screen.dart';
 import 'features/converter/presentation/screens/converter_screen.dart';
 import 'features/settings/presentation/screens/settings_screen.dart';
 
-/// Uygulamanın 3 ana menüsünü barındıran navigasyon kabuğu:
+/// Uygulamanın 3 ana menüsünü barındıran navigasyon kabuğu (TR/EN yerelleştirilmiş):
 /// 1. Hesaplayıcı (Physics Calc+) - Ana hesaplama ekranı
 /// 2. Dönüştürücü (Converter) - Birim çevirici ekranı
 /// 3. Ayarlar (Settings) - Ayarlar ve bilgi sekmesi
@@ -27,6 +28,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final loc = context.loc;
 
     return Scaffold(
       body: IndexedStack(
@@ -48,21 +50,21 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           onDestinationSelected: (idx) {
             setState(() => _currentIndex = idx);
           },
-          destinations: const [
+          destinations: [
             NavigationDestination(
-              icon: Icon(Icons.calculate_outlined),
-              selectedIcon: Icon(Icons.calculate),
-              label: 'Hesaplayıcı',
+              icon: const Icon(Icons.calculate_outlined),
+              selectedIcon: const Icon(Icons.calculate),
+              label: loc.navCalculator,
             ),
             NavigationDestination(
-              icon: Icon(Icons.sync_alt_outlined),
-              selectedIcon: Icon(Icons.sync_alt),
-              label: 'Dönüştürücü',
+              icon: const Icon(Icons.sync_alt_outlined),
+              selectedIcon: const Icon(Icons.sync_alt),
+              label: loc.navConverter,
             ),
             NavigationDestination(
-              icon: Icon(Icons.settings_outlined),
-              selectedIcon: Icon(Icons.settings),
-              label: 'Ayarlar',
+              icon: const Icon(Icons.settings_outlined),
+              selectedIcon: const Icon(Icons.settings),
+              label: loc.navSettings,
             ),
           ],
         ),

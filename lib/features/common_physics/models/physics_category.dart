@@ -1,11 +1,17 @@
 enum PhysicsCategory {
-  mechanics('Mekanik', '⚙️'),
-  electricity('Elektrik & Manyetizma', '⚡'),
-  thermodynamics('Termodinamik', '🔥'),
-  wavesOptics('Dalga & Optik', '🌊');
+  mechanics('Mekanik', 'Mechanics', '⚙️'),
+  electricity('Elektrik & Manyetizma', 'Electricity & Magnetism', '⚡'),
+  thermodynamics('Termodinamik', 'Thermodynamics', '🔥'),
+  wavesOptics('Dalga & Optik', 'Waves & Optics', '🌊');
 
-  final String label;
+  final String labelTr;
+  final String labelEn;
   final String icon;
 
-  const PhysicsCategory(this.label, this.icon);
+  const PhysicsCategory(this.labelTr, this.labelEn, this.icon);
+
+  String getLocalizedLabel(String langCode) =>
+      langCode == 'en' ? labelEn : labelTr;
+
+  String get label => labelTr;
 }

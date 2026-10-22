@@ -2,19 +2,21 @@ import 'physics_category.dart';
 
 /// Fiziksel büyüklük modeli (Örn: Kuvvet, Kütle, İş, Güç vb.)
 /// Çakışmaları önlemek için sembol yerine benzersiz [id] kullanılır.
-/// v2.0 için [bodyId] desteği mevcuttur.
+/// TR/EN çoklu dil ve v2.0 için [bodyId] desteği mevcuttur.
 class PhysicsQuantity {
   final String id;
-  final String name;
+  final String name;       // Türkçe adı
+  final String? nameEn;    // İngilizce adı
   final String symbol;
   final String icon;
   final PhysicsCategory category;
   final String defaultUnitId;
-  final String? bodyId; // v2.0 çoklu cisim desteği için (örn: 'body_1', 'body_2')
+  final String? bodyId;    // v2.0 çoklu cisim desteği için (örn: 'body_1', 'body_2')
 
   const PhysicsQuantity({
     required this.id,
     required this.name,
+    this.nameEn,
     required this.symbol,
     required this.icon,
     required this.category,
@@ -22,17 +24,27 @@ class PhysicsQuantity {
     this.bodyId,
   });
 
-  /// UI gösterimi: "💼 İş (W)" veya cisim varsa "💼 [Cisim 1] İş (W)"
-  String get displayName {
-    if (bodyId != null && bodyId!.isNotEmpty) {
-      return '$icon [$bodyId] $name ($symbol)';
+  /// Dil koduna göre lokalize edilmiş ad döner ('tr' veya 'en')
+  String getLocalizedName(String langCode) {
+    if (langCode == 'en' && nameEn != null && nameEn!.isNotEmpty) {
+      return nameEn!;
     }
-    return '$icon $name ($symbol)';
+    return name;
+  }
+
+  /// UI gösterimi: "💼 İş (W)" veya cisim varsa "💼 [Cisim 1] İş (W)"
+  String displayName([String langCode = 'tr']) {
+    final localized = getLocalizedName(langCode);
+    if (bodyId != null && bodyId!.isNotEmpty) {
+      return '$icon [$bodyId] $localized ($symbol)';
+    }
+    return '$icon $localized ($symbol)';
   }
 
   PhysicsQuantity copyWith({
     String? id,
     String? name,
+    String? nameEn,
     String? symbol,
     String? icon,
     PhysicsCategory? category,
@@ -42,6 +54,7 @@ class PhysicsQuantity {
     return PhysicsQuantity(
       id: id ?? this.id,
       name: name ?? this.name,
+      nameEn: nameEn ?? this.nameEn,
       symbol: symbol ?? this.symbol,
       icon: icon ?? this.icon,
       category: category ?? this.category,
@@ -62,5 +75,5 @@ class PhysicsQuantity {
   int get hashCode => Object.hash(id, bodyId);
 
   @override
-  String toString() => displayName;
+  String toString() => displayName('tr');
 }

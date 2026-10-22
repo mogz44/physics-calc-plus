@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/localization/app_localizations.dart';
 import '../../../../core/utils/number_formatter.dart';
 import '../../../calc_engine/presentation/widgets/quantity_selector_modal.dart';
 import '../../../common_physics/data/standard_quantities.dart';
@@ -6,7 +7,7 @@ import '../../../common_physics/data/standard_units.dart';
 import '../../../common_physics/models/physics_quantity.dart';
 import '../../../common_physics/models/physics_unit.dart';
 
-/// 2. Menü: Physics Converter (Birim Dönüştürücü)
+/// 2. Menü: Physics Converter (Birim Dönüştürücü - TR/EN Destekli)
 class ConverterScreen extends StatefulWidget {
   const ConverterScreen({super.key});
 
@@ -71,6 +72,7 @@ class _ConverterScreenState extends State<ConverterScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final loc = context.loc;
     final converted = _convertedValue;
 
     return Scaffold(
@@ -87,7 +89,7 @@ class _ConverterScreenState extends State<ConverterScreen> {
                   color: theme.colorScheme.primary, size: 22),
             ),
             const SizedBox(width: 10),
-            const Text('Physics Converter'),
+            Text(loc.converterTitle),
           ],
         ),
       ),
@@ -102,12 +104,12 @@ class _ConverterScreenState extends State<ConverterScreen> {
                 backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.1),
                 child: Text(_selectedQuantity.icon, style: const TextStyle(fontSize: 20)),
               ),
-              title: const Text(
-                'Dönüştürülecek Büyüklük',
-                style: TextStyle(fontSize: 12, color: Colors.grey),
+              title: Text(
+                loc.quantityToConvert,
+                style: const TextStyle(fontSize: 12, color: Colors.grey),
               ),
               subtitle: Text(
-                '${_selectedQuantity.name} (${_selectedQuantity.symbol})',
+                '${_selectedQuantity.getLocalizedName(loc.languageCode)} (${_selectedQuantity.symbol})',
                 style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               trailing: const Icon(Icons.arrow_drop_down_circle_outlined),
@@ -124,88 +126,94 @@ class _ConverterScreenState extends State<ConverterScreen> {
               child: Column(
                 children: [
                   // Sayısal Girdi
-                TextField(
-                  controller: _inputController,
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true, signed: true),
-                  style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                  decoration: const InputDecoration(
-                    labelText: 'Dönüştürülecek Değer',
-                    prefixIcon: Icon(Icons.edit_outlined),
+                  TextField(
+                    controller: _inputController,
+                    keyboardType: const TextInputType.numberWithOptions(decimal: true, signed: true),
+                    style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                    decoration: InputDecoration(
+                      labelText: loc.valueToConvert,
+                      prefixIcon: const Icon(Icons.edit_outlined),
+                    ),
+                    onChanged: (text) {
+                      setState(() {
+                        _inputValue = double.tryParse(text.replaceAll(',', '.')) ?? 0.0;
+                      });
+                    },
                   ),
-                  onChanged: (text) {
-                    setState(() {
-                      _inputValue = double.tryParse(text.replaceAll(',', '.')) ?? 0.0;
-                    });
-                  },
-                ),
 
-                const SizedBox(height: 16),
+                  const SizedBox(height: 16),
 
-                // Kaynak Birim -> Hedef Birim (Swap ile)
-                Row(
-                  children: [
-                    // Kaynak Birim
-                    Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: theme.colorScheme.outline),
-                        ),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<PhysicsUnit>(
-                            value: _fromUnit,
-                            isExpanded: true,
-                            dropdownColor: theme.colorScheme.surface,
-                            items: _availableUnits.map((u) {
-                              return DropdownMenuItem(
-                                value: u,
-                                child: Text('${u.symbol} (${u.name})', overflow: TextOverflow.ellipsis),
-                              );
-                            }).toList(),
-                            onChanged: (val) => setState(() => _fromUnit = val),
+                  // Kaynak Birim -> Hedef Birim (Swap ile)
+                  Row(
+                    children: [
+                      // Kaynak Birim
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: theme.colorScheme.outline),
+                          ),
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton<PhysicsUnit>(
+                              value: _fromUnit,
+                              isExpanded: true,
+                              dropdownColor: theme.colorScheme.surface,
+                              items: _availableUnits.map((u) {
+                                return DropdownMenuItem(
+                                  value: u,
+                                  child: Text(
+                                    '${u.symbol} (${u.getLocalizedName(loc.languageCode)})',
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (val) => setState(() => _fromUnit = val),
+                            ),
                           ),
                         ),
                       ),
-                    ),
 
-                    // Birimleri Değiş Tokuş Butonu
-                    IconButton(
-                      icon: const Icon(Icons.swap_horiz_rounded),
-                      tooltip: 'Birimleri Değiştir',
-                      onPressed: _swapUnits,
-                    ),
+                      // Birimleri Değiş Tokuş Butonu
+                      IconButton(
+                        icon: const Icon(Icons.swap_horiz_rounded),
+                        tooltip: loc.swapUnits,
+                        onPressed: _swapUnits,
+                      ),
 
-                    // Hedef Birim
-                    Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: theme.colorScheme.outline),
-                        ),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<PhysicsUnit>(
-                            value: _toUnit,
-                            isExpanded: true,
-                            dropdownColor: theme.colorScheme.surface,
-                            items: _availableUnits.map((u) {
-                              return DropdownMenuItem(
-                                value: u,
-                                child: Text('${u.symbol} (${u.name})', overflow: TextOverflow.ellipsis),
-                              );
-                            }).toList(),
-                            onChanged: (val) => setState(() => _toUnit = val),
+                      // Hedef Birim
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: theme.colorScheme.outline),
+                          ),
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton<PhysicsUnit>(
+                              value: _toUnit,
+                              isExpanded: true,
+                              dropdownColor: theme.colorScheme.surface,
+                              items: _availableUnits.map((u) {
+                                return DropdownMenuItem(
+                                  value: u,
+                                  child: Text(
+                                    '${u.symbol} (${u.getLocalizedName(loc.languageCode)})',
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (val) => setState(() => _toUnit = val),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
 
           const SizedBox(height: 16),
 
@@ -240,7 +248,7 @@ class _ConverterScreenState extends State<ConverterScreen> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      _toUnit!.name,
+                      _toUnit!.getLocalizedName(loc.languageCode),
                       style: const TextStyle(fontSize: 13, color: Colors.grey),
                     ),
                   ],
@@ -253,7 +261,7 @@ class _ConverterScreenState extends State<ConverterScreen> {
           // Tüm Birimlere Toplu Eşdeğer Tablosu
           if (_fromUnit != null) ...[
             Text(
-              'Tüm Eşdeğer Birimler (${_selectedQuantity.name})',
+              loc.allEquivalentUnits(_selectedQuantity.getLocalizedName(loc.languageCode)),
               style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
@@ -272,8 +280,11 @@ class _ConverterScreenState extends State<ConverterScreen> {
                   return ListTile(
                     dense: true,
                     tileColor: isCurrent ? theme.colorScheme.primary.withValues(alpha: 0.08) : null,
-                    title: Text(u.name, style: TextStyle(fontWeight: isCurrent ? FontWeight.bold : FontWeight.normal)),
-                    subtitle: u.isSi ? const Text('SI Taban Birimi', style: TextStyle(fontSize: 11, color: Colors.green)) : null,
+                    title: Text(
+                      u.getLocalizedName(loc.languageCode),
+                      style: TextStyle(fontWeight: isCurrent ? FontWeight.bold : FontWeight.normal),
+                    ),
+                    subtitle: u.isSi ? Text(loc.siBaseUnit, style: const TextStyle(fontSize: 11, color: Colors.green)) : null,
                     trailing: Text(
                       '${NumberFormatter.format(valInThisUnit)} ${u.symbol}',
                       style: TextStyle(

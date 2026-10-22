@@ -1,8 +1,7 @@
 import '../models/physics_category.dart';
 import '../models/physics_quantity.dart';
 
-/// Physics Calc+ kütüphanesindeki tüm fiziksel büyüklükler.
-/// ID'ler çakışmaları (Örn: İş(W) vs Ağırlık(W), Güç(P) vs Basınç(P)) engellemek üzere benzersizdir.
+/// Physics Calc+ kütüphanesindeki tüm fiziksel büyüklükler (TR / EN destekli).
 class StandardQuantities {
   StandardQuantities._();
 
@@ -10,6 +9,7 @@ class StandardQuantities {
   static const mass = PhysicsQuantity(
     id: 'mass_m',
     name: 'Kütle',
+    nameEn: 'Mass',
     symbol: 'm',
     icon: '🧱',
     category: PhysicsCategory.mechanics,
@@ -19,6 +19,7 @@ class StandardQuantities {
   static const distance = PhysicsQuantity(
     id: 'distance_d',
     name: 'Yol / Konum',
+    nameEn: 'Distance / Displacement',
     symbol: 'd',
     icon: '📏',
     category: PhysicsCategory.mechanics,
@@ -28,6 +29,7 @@ class StandardQuantities {
   static const time = PhysicsQuantity(
     id: 'time_t',
     name: 'Zaman',
+    nameEn: 'Time',
     symbol: 't',
     icon: '⏱️',
     category: PhysicsCategory.mechanics,
@@ -37,6 +39,7 @@ class StandardQuantities {
   static const velocity = PhysicsQuantity(
     id: 'velocity_v',
     name: 'Hız',
+    nameEn: 'Velocity',
     symbol: 'v',
     icon: '🏎️',
     category: PhysicsCategory.mechanics,
@@ -46,6 +49,7 @@ class StandardQuantities {
   static const acceleration = PhysicsQuantity(
     id: 'accel_a',
     name: 'İvme',
+    nameEn: 'Acceleration',
     symbol: 'a',
     icon: '🚀',
     category: PhysicsCategory.mechanics,
@@ -55,6 +59,7 @@ class StandardQuantities {
   static const force = PhysicsQuantity(
     id: 'force_F',
     name: 'Kuvvet',
+    nameEn: 'Force',
     symbol: 'F',
     icon: '💥',
     category: PhysicsCategory.mechanics,
@@ -64,6 +69,7 @@ class StandardQuantities {
   static const weight = PhysicsQuantity(
     id: 'weight_W',
     name: 'Ağırlık',
+    nameEn: 'Weight',
     symbol: 'W',
     icon: '⚖️',
     category: PhysicsCategory.mechanics,
@@ -73,6 +79,7 @@ class StandardQuantities {
   static const work = PhysicsQuantity(
     id: 'work_W',
     name: 'İş',
+    nameEn: 'Work',
     symbol: 'W',
     icon: '💼',
     category: PhysicsCategory.mechanics,
@@ -82,6 +89,7 @@ class StandardQuantities {
   static const kineticEnergy = PhysicsQuantity(
     id: 'energy_Ek',
     name: 'Kinetik Enerji',
+    nameEn: 'Kinetic Energy',
     symbol: 'E_k',
     icon: '⚡',
     category: PhysicsCategory.mechanics,
@@ -91,6 +99,7 @@ class StandardQuantities {
   static const potentialEnergy = PhysicsQuantity(
     id: 'energy_Ep',
     name: 'Potansiyel Enerji',
+    nameEn: 'Potential Energy',
     symbol: 'E_p',
     icon: '🏔️',
     category: PhysicsCategory.mechanics,
@@ -100,6 +109,7 @@ class StandardQuantities {
   static const power = PhysicsQuantity(
     id: 'power_P',
     name: 'Mekanik Güç',
+    nameEn: 'Mechanical Power',
     symbol: 'P',
     icon: '⚡',
     category: PhysicsCategory.mechanics,
@@ -109,6 +119,7 @@ class StandardQuantities {
   static const pressure = PhysicsQuantity(
     id: 'pressure_P',
     name: 'Basınç',
+    nameEn: 'Pressure',
     symbol: 'P',
     icon: '🎈',
     category: PhysicsCategory.mechanics,
@@ -118,6 +129,7 @@ class StandardQuantities {
   static const momentum = PhysicsQuantity(
     id: 'momentum_p',
     name: 'Momentum',
+    nameEn: 'Linear Momentum',
     symbol: 'p',
     icon: '🎳',
     category: PhysicsCategory.mechanics,
@@ -127,6 +139,7 @@ class StandardQuantities {
   static const area = PhysicsQuantity(
     id: 'area_A',
     name: 'Alan',
+    nameEn: 'Area',
     symbol: 'A',
     icon: '📐',
     category: PhysicsCategory.mechanics,
@@ -136,6 +149,7 @@ class StandardQuantities {
   static const volume = PhysicsQuantity(
     id: 'volume_V',
     name: 'Hacim',
+    nameEn: 'Volume',
     symbol: 'V',
     icon: '📦',
     category: PhysicsCategory.mechanics,
@@ -145,6 +159,7 @@ class StandardQuantities {
   static const density = PhysicsQuantity(
     id: 'density_rho',
     name: 'Özkütle / Yoğunluk',
+    nameEn: 'Density',
     symbol: 'ρ',
     icon: '🧊',
     category: PhysicsCategory.mechanics,
@@ -154,6 +169,7 @@ class StandardQuantities {
   static const gravity = PhysicsQuantity(
     id: 'gravity_g',
     name: 'Yerçekimi İvmesi',
+    nameEn: 'Gravitational Acceleration',
     symbol: 'g',
     icon: '🌍',
     category: PhysicsCategory.mechanics,
@@ -164,6 +180,7 @@ class StandardQuantities {
   static const current = PhysicsQuantity(
     id: 'current_I',
     name: 'Elektrik Akımı',
+    nameEn: 'Electric Current',
     symbol: 'I',
     icon: '🔌',
     category: PhysicsCategory.electricity,
@@ -173,6 +190,7 @@ class StandardQuantities {
   static const voltage = PhysicsQuantity(
     id: 'voltage_V',
     name: 'Gerilim (Voltaj)',
+    nameEn: 'Voltage',
     symbol: 'V',
     icon: '🔋',
     category: PhysicsCategory.electricity,
@@ -182,6 +200,7 @@ class StandardQuantities {
   static const resistance = PhysicsQuantity(
     id: 'resistance_R',
     name: 'Elektriksel Direnç',
+    nameEn: 'Resistance',
     symbol: 'R',
     icon: '💡',
     category: PhysicsCategory.electricity,
@@ -191,6 +210,7 @@ class StandardQuantities {
   static const charge = PhysicsQuantity(
     id: 'charge_q',
     name: 'Elektriksel Yük',
+    nameEn: 'Electric Charge',
     symbol: 'q',
     icon: '⚡',
     category: PhysicsCategory.electricity,

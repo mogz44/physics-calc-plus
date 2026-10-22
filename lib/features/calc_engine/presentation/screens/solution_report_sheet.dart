@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import '../../../../core/localization/app_localizations.dart';
 import '../../../../core/utils/number_formatter.dart';
 import '../../../common_physics/data/standard_quantities.dart';
 import '../../../common_physics/data/standard_units.dart';
 import '../../models/inference_result.dart';
 
-/// Hesaplama sonucunu ve Adım Adım Çözüm Ağacını sunan Rapor Sayfası / Modal.
+/// Hesaplama sonucunu ve Adım Adım Çözüm Ağacını sunan Rapor Sayfası / Modal (TR/EN Destekli).
 class SolutionReportSheet extends StatelessWidget {
   final InferenceResult result;
 
@@ -23,6 +24,7 @@ class SolutionReportSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final loc = context.loc;
 
     return Container(
       height: MediaQuery.of(context).size.height * 0.88,
@@ -61,19 +63,19 @@ class SolutionReportSheet extends StatelessWidget {
                           color: theme.colorScheme.primary, size: 22),
                     ),
                     const SizedBox(width: 12),
-                    const Column(
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Çözüm Raporu',
-                          style: TextStyle(
+                          loc.solutionReport,
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         Text(
-                          'Zincirleme Çıkarım Motoru',
-                          style: TextStyle(fontSize: 12, color: Colors.grey),
+                          loc.chainedInferenceEngine,
+                          style: const TextStyle(fontSize: 12, color: Colors.grey),
                         ),
                       ],
                     ),
@@ -104,9 +106,9 @@ class SolutionReportSheet extends StatelessWidget {
                     Icon(Icons.account_tree_outlined,
                         size: 20, color: theme.colorScheme.primary),
                     const SizedBox(width: 8),
-                    const Text(
-                      'Adım Adım Çözüm Ağacı',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    Text(
+                      loc.solutionTreeTitle,
+                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     const Spacer(),
                     Container(
@@ -117,7 +119,7 @@ class SolutionReportSheet extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
-                        '${result.steps.length} Adım',
+                        loc.stepsCount(result.steps.length),
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
@@ -136,7 +138,7 @@ class SolutionReportSheet extends StatelessWidget {
                       padding: const EdgeInsets.all(16),
                       child: Center(
                         child: Text(
-                          'Mevcut girdilerle yeni bir değer türetilemedi. Daha fazla parametre eklemeyi deneyin.',
+                          loc.noDerivedQuantitiesWarning,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: theme.textTheme.bodyMedium?.color
@@ -163,6 +165,7 @@ class SolutionReportSheet extends StatelessWidget {
 
   Widget _buildDerivedSummaryCard(BuildContext context) {
     final theme = Theme.of(context);
+    final loc = context.loc;
 
     if (result.newlyDerivedQuantityIds.isEmpty) {
       return Card(
@@ -171,16 +174,16 @@ class SolutionReportSheet extends StatelessWidget {
           borderRadius: BorderRadius.circular(14),
           side: BorderSide(color: Colors.amber.withValues(alpha: 0.3)),
         ),
-        child: const Padding(
-          padding: EdgeInsets.all(14),
+        child: Padding(
+          padding: const EdgeInsets.all(14),
           child: Row(
             children: [
-              Icon(Icons.info_outline, color: Colors.amber),
-              SizedBox(width: 12),
+              const Icon(Icons.info_outline, color: Colors.amber),
+              const SizedBox(width: 12),
               Expanded(
                 child: Text(
-                  'Girilen parametrelerle yeni bir fiziksel büyüklük türetilemedi.',
-                  style: TextStyle(fontSize: 13),
+                  loc.noDerivedQuantitiesWarning,
+                  style: const TextStyle(fontSize: 13),
                 ),
               ),
             ],
@@ -208,7 +211,7 @@ class SolutionReportSheet extends StatelessWidget {
                     color: theme.colorScheme.primary, size: 20),
                 const SizedBox(width: 8),
                 Text(
-                  'Türetilen Yeni Büyüklükler (${result.newlyDerivedQuantityIds.length})',
+                  loc.derivedQuantitiesTitle(result.newlyDerivedQuantityIds.length),
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
@@ -265,6 +268,7 @@ class SolutionReportSheet extends StatelessWidget {
 
   Widget _buildStepCard(BuildContext context, dynamic step) {
     final theme = Theme.of(context);
+    final loc = context.loc;
     final targetQ = StandardQuantities.getById(step.targetQuantityId);
     final siUnit = StandardUnits.getSiUnit(step.targetQuantityId);
 
@@ -295,14 +299,14 @@ class SolutionReportSheet extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        step.formula.groupName,
+                        step.formula.getLocalizedGroupName(loc.languageCode),
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       Text(
-                        step.formula.description,
+                        step.formula.getLocalizedDescription(loc.languageCode),
                         style: TextStyle(
                           fontSize: 12,
                           color: theme.textTheme.bodySmall?.color
@@ -344,9 +348,9 @@ class SolutionReportSheet extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Kullanılan Parametreler:',
-                        style: TextStyle(fontSize: 11, color: Colors.grey),
+                      Text(
+                        loc.usedParameters,
+                        style: const TextStyle(fontSize: 11, color: Colors.grey),
                       ),
                       const SizedBox(height: 4),
                       Wrap(
@@ -382,7 +386,7 @@ class SolutionReportSheet extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        '${targetQ?.name ?? ''} (${targetQ?.symbol ?? ''})',
+                        '${targetQ?.getLocalizedName(loc.languageCode) ?? ''} (${targetQ?.symbol ?? ''})',
                         style: const TextStyle(fontSize: 11, color: Colors.grey),
                       ),
                       Text(
@@ -406,13 +410,14 @@ class SolutionReportSheet extends StatelessWidget {
 
   Widget _buildInitialInputsCard(BuildContext context) {
     final theme = Theme.of(context);
+    final loc = context.loc;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Başlangıç Girdileri (SI Normalize):',
-          style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.grey),
+        Text(
+          loc.initialInputsNormalized,
+          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.grey),
         ),
         const SizedBox(height: 8),
         Wrap(

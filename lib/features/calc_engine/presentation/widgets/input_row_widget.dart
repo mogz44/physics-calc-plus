@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../../../core/localization/app_localizations.dart';
 import '../../../common_physics/data/standard_units.dart';
 import '../../../common_physics/models/physics_unit.dart';
 import '../../models/input_row_model.dart';
 import 'quantity_selector_modal.dart';
 
-/// Dikey Kart (Stacked) Mimarisine Sahip Girdi Satırı Bileşeni:
+/// Dikey Kart (Stacked) Mimarisine Sahip Girdi Satırı Bileşeni (TR/EN Destekli):
 /// - Üst Satır:
 ///     Sol: Büyüklük Adı (Tam genişlikte, ikon ve sembol ile)
 ///     Sağ: Silme Butonu
@@ -79,6 +80,7 @@ class _InputRowWidgetState extends State<InputRowWidget> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final loc = context.loc;
     final availableUnits = widget.row.quantity != null
         ? StandardUnits.getUnitsForQuantity(widget.row.quantity!.id)
         : <PhysicsUnit>[];
@@ -117,7 +119,7 @@ class _InputRowWidgetState extends State<InputRowWidget> {
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
-                                '${widget.row.quantity!.name} (${widget.row.quantity!.symbol})',
+                                widget.row.quantity!.displayName(loc.languageCode),
                                 style: TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.bold,
@@ -136,7 +138,7 @@ class _InputRowWidgetState extends State<InputRowWidget> {
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
-                                'Fiziksel Büyüklük Seç',
+                                loc.selectQuantity,
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
@@ -164,7 +166,7 @@ class _InputRowWidgetState extends State<InputRowWidget> {
                       size: 20,
                       color: Colors.redAccent.withValues(alpha: 0.85),
                     ),
-                    tooltip: 'Satırı Sil',
+                    tooltip: loc.deleteRow,
                     visualDensity: VisualDensity.compact,
                     padding: EdgeInsets.zero,
                     constraints:
@@ -203,7 +205,7 @@ class _InputRowWidgetState extends State<InputRowWidget> {
                         color: colorScheme.onSurface,
                       ),
                       decoration: InputDecoration(
-                        hintText: 'Değer girin (örn: 10.5)',
+                        hintText: loc.enterValueHint,
                         hintStyle: TextStyle(
                           fontSize: 13,
                           color: colorScheme.onSurfaceVariant,
@@ -249,7 +251,7 @@ class _InputRowWidgetState extends State<InputRowWidget> {
                           isExpanded: true,
                           dropdownColor: colorScheme.surface,
                           hint: Text(
-                            'Birim',
+                            loc.unit,
                             style: TextStyle(
                               fontSize: 12,
                               color: colorScheme.onSurfaceVariant,
