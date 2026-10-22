@@ -5,11 +5,17 @@ import 'core/settings/app_settings_controller.dart';
 import 'core/settings/app_settings_scope.dart';
 import 'core/theme/app_theme.dart';
 import 'main_navigation_screen.dart';
+import 'features/onboarding/presentation/screens/onboarding_screen.dart';
 
 class PhysicsCalcApp extends StatelessWidget {
   final AppSettingsController? settingsController;
+  final bool isFirstRun;
 
-  const PhysicsCalcApp({super.key, this.settingsController});
+  const PhysicsCalcApp({
+    super.key, 
+    this.settingsController,
+    required this.isFirstRun,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +39,9 @@ class PhysicsCalcApp extends StatelessWidget {
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
-          home: const MainNavigationScreen(),
+          home: isFirstRun 
+              ? const OnboardingScreen() 
+              : const MainNavigationScreen(),
         );
       },
     );
