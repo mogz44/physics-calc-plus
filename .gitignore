@@ -65,3 +65,8 @@ macos/**/DerivedData/
 # Linux / Windows
 linux/flutter/ephemeral/
 windows/flutter/ephemeral/
+
+# Graphify knowledge graph output
+graphify-out/
+*.graph.json
+/.agents

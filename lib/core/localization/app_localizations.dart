@@ -120,6 +120,44 @@ class AppLocalizations {
   String get privacySubtitle => isTurkish
       ? '%100 Çevrimdışı, Sıfır Takipçi, Tamamen Açık Kaynak'
       : '100% Offline, Zero Trackers, Fully Open Source';
+
+  // --- ONBOARDING ---
+  String get onboardingSkip => isTurkish ? 'Geç' : 'Skip';
+  String get onboardingNext => isTurkish ? 'Devam' : 'Next';
+  String get onboardingStart => isTurkish ? 'Başla' : 'Get Started';
+
+  String get onboardingPage1Title => isTurkish ? 'Fizik Hesaplamalarını\nÇöz' : 'Solve Physics\nCalculations';
+  String get onboardingPage1Subtitle => isTurkish
+      ? 'Zincirleme Çıkarım Motoru ile girilen verilerden otomatik olarak yeni fiziksel büyüklükler türet.'
+      : 'Automatically derive new physical quantities from your inputs using the Chained Inference Engine.';
+  String get onboardingPage1Feature1 => isTurkish ? 'Dikey esnek girdi kartları' : 'Vertical stacked input cards';
+  String get onboardingPage1Feature2 => isTurkish ? 'Otomatik formül zinciri' : 'Automatic formula chaining';
+  String get onboardingPage1Feature3 => isTurkish ? 'Adım adım çözüm raporu' : 'Step-by-step solution report';
+
+  String get onboardingPage2Title => isTurkish ? 'Tercihlerini Seç' : 'Choose Your Preferences';
+  String get onboardingPage2Subtitle => isTurkish
+      ? 'Dil ve tema seçimini şimdi yap. Daha sonra Ayarlar\'dan değiştirebilirsin.'
+      : 'Set your language and theme now. You can change them anytime in Settings.';
+  String get onboardingPage2ThemeLabel => isTurkish ? 'Tema' : 'Theme';
+  String get onboardingPage2LangLabel => isTurkish ? 'Dil / Language' : 'Language';
+  String get systemDefault => isTurkish ? 'Sistem' : 'System';
+
+  String get onboardingPage3Title => isTurkish ? 'Nasıl Kullanılır?' : 'How to Use?';
+  String get onboardingPage3Subtitle => isTurkish
+      ? 'Birkaç adımda fizik problemlerini çözmeye başla!'
+      : 'Start solving physics problems in just a few steps!';
+  String get onboardingPage3Step1 => isTurkish ? '1. "Değer Ekle" ile fiziksel büyüklükler ekle' : '1. Tap "Add Value" to add physical quantities';
+  String get onboardingPage3Step2 => isTurkish ? '2. Her karta büyüklük, değer ve birim gir' : '2. Enter quantity, value and unit for each card';
+  String get onboardingPage3Step3 => isTurkish ? '3. Motor otomatik olarak yeni değerler türetir' : '3. The engine automatically derives new values';
+  String get onboardingPage3Step4 => isTurkish ? '4. "Çözüm Raporunu Gör" ile detaylı analiz' : '4. Tap "View Report" for detailed analysis';
+
+  // --- AYARLAR EKSTRA ---
+  String get viewOnboardingAgain => isTurkish ? 'Kullanım Rehberini Tekrar Gör' : 'View Onboarding Again';
+  String get viewOnboardingSubtitle => isTurkish ? 'Uygulama rehberini baştan aç' : 'Reopen the app guide from the beginning';
+  String get developedBy => 'Developed with ♥ by Mogz';
+  String get appVersion => 'Physics Calc+ v1.1.0';
+  String get githubLink => 'GitHub';
+  String get izzyLink => 'IzzyOnDroid';
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

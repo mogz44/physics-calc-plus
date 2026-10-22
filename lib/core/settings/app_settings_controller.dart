@@ -5,14 +5,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AppSettingsController extends ChangeNotifier {
   static const String _keyThemeMode = 'pref_theme_mode';
   static const String _keyLanguageCode = 'pref_language_code';
+  static const String _keyFirstRun = 'is_first_run';
 
   ThemeMode _themeMode = ThemeMode.system;
   Locale? _locale;
   bool _isLoaded = false;
+  bool _isFirstRun = true;
 
   ThemeMode get themeMode => _themeMode;
   Locale? get locale => _locale;
   bool get isLoaded => _isLoaded;
+  bool get isFirstRun => _isFirstRun;
 
   /// SharedPreferences'tan kayıtlı ayarları yükler.
   Future<void> loadSettings() async {
@@ -38,6 +41,9 @@ class AppSettingsController extends ChangeNotifier {
       } else {
         _locale = null; // Sistem varsayılanı
       }
+
+      // İlk çalıştırma kontrolü
+      _isFirstRun = prefs.getBool(_keyFirstRun) ?? true;
     } catch (e) {
       debugPrint('Ayar yükleme hatası: $e');
     } finally {
@@ -78,6 +84,32 @@ class AppSettingsController extends ChangeNotifier {
       }
     } catch (e) {
       debugPrint('Dil kaydetme hatası: $e');
+    }
+  }
+
+  /// Onboarding'i tamamlandı olarak işaretler ve hafızaya yazar.
+  Future<void> setFirstRunDone() async {
+    _isFirstRun = false;
+    notifyListeners();
+
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool(_keyFirstRun, false);
+    } catch (e) {
+      debugPrint('İlk çalıştırma durumu kaydetme hatası: $e');
+    }
+  }
+
+  /// Onboarding'i sıfırlar (Ayarlar'dan "Rehberi Tekrar Gör" için).
+  Future<void> resetFirstRun() async {
+    _isFirstRun = true;
+    notifyListeners();
+
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool(_keyFirstRun, true);
+    } catch (e) {
+      debugPrint('İlk çalıştırma sıfırlama hatası: $e');
     }
   }
 }
