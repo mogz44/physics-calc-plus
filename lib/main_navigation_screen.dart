@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'core/localization/app_localizations.dart';
-import 'features/calc_engine/presentation/screens/calc_screen.dart';
-import 'features/converter/presentation/screens/converter_screen.dart';
-import 'features/settings/presentation/screens/settings_screen.dart';
+import 'screens/calc_screen.dart';
+import 'screens/converter_screen.dart';
+import 'screens/settings_screen.dart';
 
 /// Uygulamanın 3 ana menüsünü barındıran navigasyon kabuğu (TR/EN yerelleştirilmiş):
 /// 1. Hesaplayıcı (Physics Calc+) - Ana hesaplama ekranı

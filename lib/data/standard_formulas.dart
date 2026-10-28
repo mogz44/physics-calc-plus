@@ -338,6 +338,45 @@ class StandardFormulas {
     ),
 
     // ==========================================
+    // 10.1 İTİŞ / İMPULS (I = F * dt)
+    // ==========================================
+    Formula(
+      id: 'impulse_from_force_time',
+      groupName: 'İtiş (İmpuls)',
+      groupNameEn: 'Impulse',
+      description: 'İtiş Hesabı',
+      descriptionEn: 'Impulse Calculation',
+      latex: 'I = F \\cdot \\Delta t',
+      targetQuantityId: 'impulse_I',
+      requiredQuantityIds: ['force_F', 'time_t'],
+      calculate: (v) => v['force_F']! * v['time_t']!,
+    ),
+    Formula(
+      id: 'force_from_impulse_time',
+      groupName: 'İtiş (İmpuls)',
+      groupNameEn: 'Impulse',
+      description: 'Kuvvet Hesabı',
+      descriptionEn: 'Force Calculation',
+      latex: 'F = I / \\Delta t',
+      targetQuantityId: 'force_F',
+      requiredQuantityIds: ['impulse_I', 'time_t'],
+      isValid: (v) => v['time_t']! != 0,
+      calculate: (v) => v['impulse_I']! / v['time_t']!,
+    ),
+    Formula(
+      id: 'time_from_impulse_force',
+      groupName: 'İtiş (İmpuls)',
+      groupNameEn: 'Impulse',
+      description: 'Etki Süresi Hesabı',
+      descriptionEn: 'Interaction Time Calculation',
+      latex: '\\Delta t = I / F',
+      targetQuantityId: 'time_t',
+      requiredQuantityIds: ['impulse_I', 'force_F'],
+      isValid: (v) => v['force_F']! != 0,
+      calculate: (v) => v['impulse_I']! / v['force_F']!,
+    ),
+
+    // ==========================================
     // 11. ÖZKÜTLE (ρ = m / V)
     // ==========================================
     Formula(

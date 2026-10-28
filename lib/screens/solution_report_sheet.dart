@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../../../core/localization/app_localizations.dart';
-import '../../../../core/utils/number_formatter.dart';
-import '../../../common_physics/data/standard_quantities.dart';
-import '../../../common_physics/data/standard_units.dart';
-import '../../models/inference_result.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
+import '../core/localization/app_localizations.dart';
+import '../core/utils/number_formatter.dart';
+import '../data/standard_quantities.dart';
+import '../data/standard_units.dart';
+import '../models/inference_result.dart';
 
 /// Hesaplama sonucunu ve Adım Adım Çözüm Ağacını sunan Rapor Sayfası / Modal (TR/EN Destekli).
 class SolutionReportSheet extends StatelessWidget {
@@ -305,12 +306,16 @@ class SolutionReportSheet extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Text(
-                        step.formula.getLocalizedDescription(loc.languageCode),
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: theme.textTheme.bodySmall?.color
-                              ?.withValues(alpha: 0.7),
+                      MarkdownBody(
+                        data: _cleanMathSymbols(
+                          step.formula.getLocalizedDescription(loc.languageCode),
+                        ),
+                        styleSheet: MarkdownStyleSheet.fromTheme(theme).copyWith(
+                          p: TextStyle(
+                            fontSize: 12,
+                            color: theme.textTheme.bodySmall?.color
+                                ?.withValues(alpha: 0.7),
+                          ),
                         ),
                       ),
                     ],
@@ -323,12 +328,15 @@ class SolutionReportSheet extends StatelessWidget {
                     color: theme.colorScheme.secondary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: Text(
-                    step.formula.latex,
-                    style: const TextStyle(
-                      fontFamily: 'monospace',
-                      fontWeight: FontWeight.w600,
-                      fontSize: 13,
+                  child: MarkdownBody(
+                    data: _formatMathMarkdown(step.formula.latex),
+                    styleSheet: MarkdownStyleSheet.fromTheme(theme).copyWith(
+                      p: TextStyle(
+                        fontFamily: 'monospace',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 13,
+                        color: theme.colorScheme.primary,
+                      ),
                     ),
                   ),
                 ),
@@ -438,5 +446,20 @@ class SolutionReportSheet extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  static String _cleanMathSymbols(String text) {
+    return text
+        .replaceAll(r'\cdot', '·')
+        .replaceAll(r'\Delta', 'Δ')
+        .replaceAll(r'\rho', 'ρ')
+        .replaceAll(r'\theta', 'θ')
+        .replaceAll(r'\pi', 'π')
+        .replaceAll(r'\times', '×');
+  }
+
+  static String _formatMathMarkdown(String latex) {
+    final cleaned = _cleanMathSymbols(latex);
+    return '`$cleaned`';
   }
 }

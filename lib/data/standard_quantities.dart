@@ -136,6 +136,16 @@ class StandardQuantities {
     defaultUnitId: 'kg_m_s',
   );
 
+  static const impulse = PhysicsQuantity(
+    id: 'impulse_I',
+    name: 'İtiş (İmpuls)',
+    nameEn: 'Impulse',
+    symbol: 'I',
+    icon: '💥',
+    category: PhysicsCategory.mechanics,
+    defaultUnitId: 'N_s_impulse',
+  );
+
   static const area = PhysicsQuantity(
     id: 'area_A',
     name: 'Alan',
@@ -233,6 +243,7 @@ class StandardQuantities {
     power,
     pressure,
     momentum,
+    impulse,
     area,
     volume,
     density,

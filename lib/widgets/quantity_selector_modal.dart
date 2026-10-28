@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../../../core/localization/app_localizations.dart';
-import '../../../common_physics/data/standard_quantities.dart';
-import '../../../common_physics/models/physics_category.dart';
-import '../../../common_physics/models/physics_quantity.dart';
+import '../core/localization/app_localizations.dart';
+import '../data/standard_quantities.dart';
+import '../models/physics_category.dart';
+import '../models/physics_quantity.dart';
 
 /// Kullanıcının fiziksel büyüklüğü arayarak ve kategorilere göre seçmesini sağlayan Modal (TR/EN Destekli).
 class QuantitySelectorModal extends StatefulWidget {

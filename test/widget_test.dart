@@ -7,7 +7,42 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   setUp(() {
-    SharedPreferences.setMockInitialValues({});
+    SharedPreferences.setMockInitialValues({
+      'is_first_run': false,
+    });
+  });
+
+  testWidgets('Physics Calc+ Onboarding Test (İlk Açılış ve Başla Akışı)', (WidgetTester tester) async {
+    SharedPreferences.setMockInitialValues({
+      'is_first_run': true,
+    });
+
+    final controller = AppSettingsController();
+    await controller.loadSettings();
+    await controller.setLocale(const Locale('tr'));
+
+    await tester.pumpWidget(
+      AppSettingsScope(
+        controller: controller,
+        child: PhysicsCalcApp(
+          settingsController: controller,
+          isFirstRun: true,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    // Onboarding ekranı açılmış olmalı (Geç ve Devam butonları görünmeli)
+    expect(find.text('Geç'), findsOneWidget);
+    expect(find.text('Devam'), findsOneWidget);
+
+    // "Geç" butonuna basınca Onboarding tamamlanıp ana ekrana geçmeli
+    await tester.tap(find.text('Geç'));
+    await tester.pumpAndSettle();
+
+    // Ana ekran elemanları görünmeli
+    expect(find.text('Hesaplayıcı'), findsOneWidget);
+    expect(controller.isFirstRun, false);
   });
 
   testWidgets('Physics Calc+ render smoke test (Türkçe)', (WidgetTester tester) async {
@@ -18,7 +53,10 @@ void main() {
     await tester.pumpWidget(
       AppSettingsScope(
         controller: controller,
-        child: PhysicsCalcApp(settingsController: controller),
+        child: PhysicsCalcApp(
+          settingsController: controller,
+          isFirstRun: false,
+        ),
       ),
     );
     await tester.pumpAndSettle();
@@ -45,7 +83,10 @@ void main() {
     await tester.pumpWidget(
       AppSettingsScope(
         controller: controller,
-        child: PhysicsCalcApp(settingsController: controller),
+        child: PhysicsCalcApp(
+          settingsController: controller,
+          isFirstRun: false,
+        ),
       ),
     );
     await tester.pumpAndSettle();
@@ -68,7 +109,10 @@ void main() {
     await tester.pumpWidget(
       AppSettingsScope(
         controller: controller,
-        child: PhysicsCalcApp(settingsController: controller),
+        child: PhysicsCalcApp(
+          settingsController: controller,
+          isFirstRun: false,
+        ),
       ),
     );
     await tester.pumpAndSettle();

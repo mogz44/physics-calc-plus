@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:physics_calc/features/calc_engine/engine/inference_engine.dart';
-import 'package:physics_calc/features/calc_engine/models/input_row_model.dart';
-import 'package:physics_calc/features/common_physics/data/standard_quantities.dart';
-import 'package:physics_calc/features/common_physics/data/standard_units.dart';
+import 'package:physics_calc/engine/inference_engine.dart';
+import 'package:physics_calc/models/input_row_model.dart';
+import 'package:physics_calc/data/standard_quantities.dart';
+import 'package:physics_calc/data/standard_units.dart';
 
 void main() {
   group('InferenceEngine Tests', () {
@@ -122,6 +122,28 @@ void main() {
 
       // v = d / t formülü time != 0 kontrolü nedeniyle çalışmamalı
       expect(result.allKnownValues.containsKey('velocity_v'), isFalse);
+    });
+
+    test('İtiş (Impulse) çıkarım testi (F = 20 N, t = 3 s -> I = 60 N·s)', () {
+      final inputRows = [
+        InputRowModel(
+          rowId: '1',
+          quantity: StandardQuantities.force,
+          value: 20,
+          selectedUnit: StandardUnits.findUnit('force_F', 'newton'),
+        ),
+        InputRowModel(
+          rowId: '2',
+          quantity: StandardQuantities.time,
+          value: 3,
+          selectedUnit: StandardUnits.findUnit('time_t', 's'),
+        ),
+      ];
+
+      final result = engine.solve(inputRows);
+
+      expect(result.allKnownValues.containsKey('impulse_I'), isTrue);
+      expect(result.allKnownValues['impulse_I'], closeTo(60.0, 0.0001));
     });
   });
 }

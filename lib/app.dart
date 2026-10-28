@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:physics_calc/screens/onboarding_screen.dart';
 import 'core/localization/app_localizations.dart';
 import 'core/settings/app_settings_controller.dart';
 import 'core/settings/app_settings_scope.dart';
 import 'core/theme/app_theme.dart';
-import 'main_navigation_screen.dart';
-import 'features/onboarding/presentation/screens/onboarding_screen.dart';
+import 'main_navigation_screen.dart'; 
 
 class PhysicsCalcApp extends StatelessWidget {
   final AppSettingsController? settingsController;
-  final bool isFirstRun;
+  final bool? isFirstRun;
 
   const PhysicsCalcApp({
     super.key, 
     this.settingsController,
-    required this.isFirstRun,
+    this.isFirstRun,
   });
 
   @override
@@ -25,6 +25,8 @@ class PhysicsCalcApp extends StatelessWidget {
     return ListenableBuilder(
       listenable: settings,
       builder: (context, _) {
+        final showOnboarding = isFirstRun ?? settings.isFirstRun;
+
         return MaterialApp(
           title: 'Physics Calc+',
           debugShowCheckedModeBanner: false,
@@ -39,7 +41,7 @@ class PhysicsCalcApp extends StatelessWidget {
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
-          home: isFirstRun 
+          home: showOnboarding 
               ? const OnboardingScreen() 
               : const MainNavigationScreen(),
         );

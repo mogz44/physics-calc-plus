@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
-import '../../../../core/localization/app_localizations.dart';
-import '../../engine/inference_engine.dart';
-import '../../models/inference_result.dart';
-import '../../models/input_row_model.dart';
+import '../core/localization/app_localizations.dart';
+import '../engine/inference_engine.dart';
+import '../models/inference_result.dart';
+import '../models/input_row_model.dart';
 import '../widgets/input_row_widget.dart';
 import 'solution_report_sheet.dart';
 

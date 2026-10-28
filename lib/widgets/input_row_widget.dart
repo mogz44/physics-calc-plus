@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../../../core/localization/app_localizations.dart';
-import '../../../common_physics/data/standard_units.dart';
-import '../../../common_physics/models/physics_unit.dart';
-import '../../models/input_row_model.dart';
+import '../core/localization/app_localizations.dart';
+import '../data/standard_units.dart';
+import '../models/physics_unit.dart';
+import '../models/input_row_model.dart';
 import 'quantity_selector_modal.dart';
 
 /// Dikey Kart (Stacked) Mimarisine Sahip Girdi Satırı Bileşeni (TR/EN Destekli):

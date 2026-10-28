@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import '../../../../core/localization/app_localizations.dart';
-import '../../../../core/settings/app_settings_controller.dart';
-import '../../../../core/settings/app_settings_scope.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'onboarding_screen.dart';
+import '../core/localization/app_localizations.dart';
+import '../core/settings/app_settings_controller.dart';
+import '../core/settings/app_settings_scope.dart';
 
-/// 3. Menü: Ayarlar (Settings) Sekmesi (TR/EN & Tema Modu Yönetimi)
+/// 3. Menü: Ayarlar (Settings) Sekmesi (Görünüm, Dil, Rehber & Geliştirici Bilgileri)
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
@@ -79,7 +81,7 @@ class SettingsScreen extends StatelessWidget {
               _buildDialogOption(
                 context,
                 title: loc.themeSystem,
-                icon: Icons.language_rounded,
+                customLeading: _buildBadge(context, 'SYS', colorScheme.primary),
                 isSelected: currentCode == 'system',
                 onTap: () {
                   controller.setLocale(null); // Sistem dili
@@ -89,7 +91,7 @@ class SettingsScreen extends StatelessWidget {
               _buildDialogOption(
                 context,
                 title: loc.turkish,
-                customLeading: const Text('🇹🇷', style: TextStyle(fontSize: 22)),
+                customLeading: _buildBadge(context, 'TR', colorScheme.primary),
                 isSelected: currentCode == 'tr',
                 onTap: () {
                   controller.setLocale(const Locale('tr'));
@@ -99,7 +101,7 @@ class SettingsScreen extends StatelessWidget {
               _buildDialogOption(
                 context,
                 title: loc.english,
-                customLeading: const Text('🇬🇧', style: TextStyle(fontSize: 22)),
+                customLeading: _buildBadge(context, 'EN', colorScheme.primary),
                 isSelected: currentCode == 'en',
                 onTap: () {
                   controller.setLocale(const Locale('en'));
@@ -120,6 +122,28 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
+  static Widget _buildBadge(BuildContext context, String text, Color primary) {
+    return Container(
+      width: 34,
+      height: 24,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: primary.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(color: primary.withValues(alpha: 0.3)),
+      ),
+      child: Text(
+        text,
+        style: TextStyle(
+          fontSize: 11,
+          fontWeight: FontWeight.bold,
+          color: primary,
+          letterSpacing: 0.5,
+        ),
+      ),
+    );
+  }
+
   static Widget _buildDialogOption(
     BuildContext context, {
     required String title,
@@ -131,7 +155,10 @@ class SettingsScreen extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return ListTile(
-      leading: customLeading ?? (icon != null ? Icon(icon, color: isSelected ? colorScheme.primary : colorScheme.onSurfaceVariant) : null),
+      leading: customLeading ??
+          (icon != null
+              ? Icon(icon, color: isSelected ? colorScheme.primary : colorScheme.onSurfaceVariant)
+              : null),
       title: Text(
         title,
         style: TextStyle(
@@ -145,6 +172,24 @@ class SettingsScreen extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       onTap: onTap,
     );
+  }
+
+  Future<void> _openUrl(BuildContext context, String urlString) async {
+    final uri = Uri.parse(urlString);
+    try {
+      final launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
+      if (!launched && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Could not launch $urlString')),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
+      }
+    }
   }
 
   @override
@@ -194,7 +239,7 @@ class SettingsScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         children: [
-          // 1. BÖLÜM: GÖRÜNÜM & DİL
+          // 1. BÖLÜM: GÖRÜNÜM & TERCİHLER
           _buildSectionHeader(context, loc.appearanceSection),
           Card(
             child: Column(
@@ -226,64 +271,19 @@ class SettingsScreen extends StatelessWidget {
                 ),
                 const Divider(height: 1),
 
-                // Kart Mimarisi Bilgisi
+                // Kullanım Rehberini Tekrar Gör (Re-open Onboarding)
                 ListTile(
-                  leading: Icon(Icons.view_agenda_outlined, color: colorScheme.primary),
-                  title: Text(loc.cardArchitecture),
-                  subtitle: Text(loc.cardArchitectureSubtitle),
-                  trailing: Text(
-                    loc.active,
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: colorScheme.primary,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          const SizedBox(height: 20),
-
-          // 2. BÖLÜM: HESAPLAMA & MOTOR AYARLARI
-          _buildSectionHeader(context, loc.calcEngineSection),
-          Card(
-            child: Column(
-              children: [
-                ListTile(
-                  leading: Icon(Icons.tune_rounded, color: colorScheme.primary),
-                  title: Text(loc.decimalPrecision),
-                  subtitle: Text(loc.decimalPrecisionSubtitle),
-                  trailing: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: colorScheme.primary.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      loc.digitsCount,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: colorScheme.primary,
-                        fontSize: 12,
+                  leading: Icon(Icons.help_outline_rounded, color: colorScheme.primary),
+                  title: Text(loc.viewOnboardingAgain),
+                  subtitle: Text(loc.viewOnboardingSubtitle),
+                  trailing: const Icon(Icons.chevron_right_rounded),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const OnboardingScreen(),
                       ),
-                    ),
-                  ),
-                ),
-                const Divider(height: 1),
-                ListTile(
-                  leading: Icon(Icons.sync_rounded, color: colorScheme.primary),
-                  title: Text(loc.autoSiNormalization),
-                  subtitle: Text(loc.autoSiSubtitle),
-                  trailing: Icon(Icons.check_circle_rounded, color: colorScheme.primary),
-                ),
-                const Divider(height: 1),
-                ListTile(
-                  leading: Icon(Icons.shield_outlined, color: colorScheme.primary),
-                  title: Text(loc.zeroDivisionGuard),
-                  subtitle: Text(loc.zeroDivisionSubtitle),
-                  trailing: Icon(Icons.check_circle_rounded, color: colorScheme.primary),
+                    );
+                  },
                 ),
               ],
             ),
@@ -291,7 +291,7 @@ class SettingsScreen extends StatelessWidget {
 
           const SizedBox(height: 20),
 
-          // 3. BÖLÜM: HAKKINDA & LİSANS
+          // 2. BÖLÜM: HAKKINDA & LİSANS
           _buildSectionHeader(context, loc.aboutSection),
           Card(
             child: Column(
@@ -307,7 +307,7 @@ class SettingsScreen extends StatelessWidget {
                     ),
                   ),
                   title: const Text('Physics Calc+'),
-                  subtitle: const Text('org.mogz.physicscalc • v1.0.0'),
+                  subtitle: Text('org.mogz.physicscalc • ${loc.appVersion}'),
                 ),
                 const Divider(height: 1),
                 ListTile(
@@ -325,7 +325,12 @@ class SettingsScreen extends StatelessWidget {
             ),
           ),
 
-          const SizedBox(height: 24),
+          const SizedBox(height: 28),
+
+          // 3. GELİŞTİRİCİ FOOTER'I
+          _buildDeveloperFooter(context),
+
+          const SizedBox(height: 16),
         ],
       ),
     );
@@ -343,6 +348,137 @@ class SettingsScreen extends StatelessWidget {
           letterSpacing: 0.8,
           color: theme.colorScheme.onSurfaceVariant,
         ),
+      ),
+    );
+  }
+
+  Widget _buildDeveloperFooter(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final loc = context.loc;
+
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Logo amblemi
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: colorScheme.surface,
+              border: Border.all(
+                color: colorScheme.primary.withValues(alpha: 0.35),
+                width: 1.5,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: colorScheme.primary.withValues(alpha: 0.12),
+                  blurRadius: 16,
+                  spreadRadius: 2,
+                ),
+              ],
+            ),
+            child: ClipOval(
+              child: Image.asset(
+                'assets/icon/app_logo.png',
+                fit: BoxFit.contain,
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+
+          // Sürüm ve Geliştirici İmzası
+          Text(
+            loc.appVersion,
+            style: theme.textTheme.titleSmall?.copyWith(
+              fontWeight: FontWeight.bold,
+              letterSpacing: 0.4,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            loc.developedBy,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: colorScheme.onSurface.withValues(alpha: 0.7),
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(height: 12),
+
+          // GPL-3.0 Lisans etiketi
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            decoration: BoxDecoration(
+              color: colorScheme.primary.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: colorScheme.primary.withValues(alpha: 0.25),
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.gavel_rounded, size: 13, color: colorScheme.primary),
+                const SizedBox(width: 5),
+                Text(
+                  'GPL-3.0 License',
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                    color: colorScheme.primary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 14),
+
+          // GitHub ve IzzyOnDroid Butonları
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              OutlinedButton.icon(
+                onPressed: () => _openUrl(
+                  context,
+                  'https://github.com/mogz44/physics-calc-plus',
+                ),
+                icon: const Icon(Icons.code_rounded, size: 16),
+                label: Text(loc.githubLink),
+                style: OutlinedButton.styleFrom(
+                  visualDensity: VisualDensity.compact,
+                  foregroundColor: colorScheme.primary,
+                  side: BorderSide(
+                    color: colorScheme.primary.withValues(alpha: 0.35),
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              OutlinedButton.icon(
+                onPressed: () => _openUrl(
+                  context,
+                  'https://apt.izzysoft.de/fdroid/',
+                ),
+                icon: const Icon(Icons.shop_2_outlined, size: 16),
+                label: Text(loc.izzyLink),
+                style: OutlinedButton.styleFrom(
+                  visualDensity: VisualDensity.compact,
+                  foregroundColor: colorScheme.primary,
+                  side: BorderSide(
+                    color: colorScheme.primary.withValues(alpha: 0.35),
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

@@ -1,5 +1,5 @@
-import '../../common_physics/models/physics_quantity.dart';
-import '../../common_physics/models/physics_unit.dart';
+import 'physics_quantity.dart';
+import 'physics_unit.dart';
 
 /// UI'daki her bir girdi satırının durumunu tutan model.
 class InputRowModel {

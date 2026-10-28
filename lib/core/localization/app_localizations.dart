@@ -155,7 +155,7 @@ class AppLocalizations {
   String get viewOnboardingAgain => isTurkish ? 'Kullanım Rehberini Tekrar Gör' : 'View Onboarding Again';
   String get viewOnboardingSubtitle => isTurkish ? 'Uygulama rehberini baştan aç' : 'Reopen the app guide from the beginning';
   String get developedBy => 'Developed with ♥ by Mogz';
-  String get appVersion => 'Physics Calc+ v1.1.0';
+  String get appVersion => 'v1.1.0';
   String get githubLink => 'GitHub';
   String get izzyLink => 'IzzyOnDroid';
 }

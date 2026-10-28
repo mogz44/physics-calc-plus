@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import '../../../../core/localization/app_localizations.dart';
-import '../../../../core/utils/number_formatter.dart';
-import '../../../calc_engine/presentation/widgets/quantity_selector_modal.dart';
-import '../../../common_physics/data/standard_quantities.dart';
-import '../../../common_physics/data/standard_units.dart';
-import '../../../common_physics/models/physics_quantity.dart';
-import '../../../common_physics/models/physics_unit.dart';
+import '../core/localization/app_localizations.dart';
+import '../core/utils/number_formatter.dart';
+import '../widgets/quantity_selector_modal.dart';
+import '../data/standard_quantities.dart';
+import '../data/standard_units.dart';
+import '../models/physics_quantity.dart';
+import '../models/physics_unit.dart';
 
 /// 2. Menü: Physics Converter (Birim Dönüştürücü - TR/EN Destekli)
 class ConverterScreen extends StatefulWidget {

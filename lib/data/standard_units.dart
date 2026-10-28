@@ -114,6 +114,13 @@ class StandardUnits {
     PhysicsUnit.linear(id: 'g_cm_s', quantityId: 'momentum_p', name: 'g·cm/s', nameEn: 'g·cm/s', symbol: 'g·cm/s', factorToSi: 1e-5),
   ];
 
+  // --- İTİŞ / İMPULS (impulse_I) ---
+  static final impulseUnits = <PhysicsUnit>[
+    PhysicsUnit.linear(id: 'N_s_impulse', quantityId: 'impulse_I', name: 'Newton·saniye', nameEn: 'Newton·second', symbol: 'N·s', factorToSi: 1.0, isSi: true),
+    PhysicsUnit.linear(id: 'kg_m_s_impulse', quantityId: 'impulse_I', name: 'kg·m/s', nameEn: 'kg·m/s', symbol: 'kg·m/s', factorToSi: 1.0),
+    PhysicsUnit.linear(id: 'kN_s_impulse', quantityId: 'impulse_I', name: 'Kilonewton·saniye', nameEn: 'Kilonewton·second', symbol: 'kN·s', factorToSi: 1000.0),
+  ];
+
   // --- ALAN (area_A) ---
   static final areaUnits = <PhysicsUnit>[
     PhysicsUnit.linear(id: 'm2', quantityId: 'area_A', name: 'Metrekare', nameEn: 'Square Meter', symbol: 'm²', factorToSi: 1.0, isSi: true),
@@ -186,6 +193,7 @@ class StandardUnits {
     'power_P': powerUnits,
     'pressure_P': pressureUnits,
     'momentum_p': momentumUnits,
+    'impulse_I': impulseUnits,
     'area_A': areaUnits,
     'volume_V': volumeUnits,
     'density_rho': densityUnits,
