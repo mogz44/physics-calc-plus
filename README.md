@@ -4,7 +4,6 @@
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Flutter](https://img.shields.io/badge/Flutter-3.41+-02569B?logo=flutter)](https://flutter.dev)
-[![F-Droid Compatible](https://img.shields.io/badge/F--Droid-Ready-3DDC84?logo=f-droid)](https://f-droid.org/)
 [![Privacy: Offline](https://img.shields.io/badge/Privacy-100%25%20Offline-success)](https://github.com/muhammedoguz/PhysicsCalc)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/muhammedoguz/PhysicsCalc/pulls)
 
